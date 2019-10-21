@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:font-family="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>友链 | Hoji</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css" >
+  <link rel="stylesheet" href="../static/css/me.css" th:href="/css/me.css">
+  <link href="https://lib.baomitu.com/font-awesome/5.8.0/css/fontawesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/friendlylink.css">
+  <link rel="stylesheet" href="/static/css/all.css">
+  <script src="https://lib.baomitu.com/amazeui/2.7.2/js/amazeui.min.js"></script>
+  <script src="https://lib.baomitu.com/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+<!--导航-->
+<nav th:replace="_fragments :: menu(6)" class="ui  attached segment m-padded-tb-mini m-shadow-small" >
+  <div class="ui container">
+    <div class="ui  secondary stackable menu"><!--inverted是翻转的意思-->
+      <!--        <h2 class="ui header item" style="color: #3da8f3;">Blog</h2>-->
+      <div class="item">
+        <img src="https://i.52112.com/icon/jpg/256/20180924/22009/937105.jpg" alt="" class="ui mini avatar image">
+        <div class="content"><a href="#" class="header"><font class="myfont-family hojiSize">Hoji</font></a></div>
+      </div>
+      <p class="m-text-thin" style="margin-top: 19px; margin-right: 40px; color: #A6C6FF">人如酒：有些会转变成醋，但出类拔萃者会随着年月增长而日渐香醇</p>
+
+      <a href="#" class=" m-item item m-mobile-hide"><i class="mid home icon"></i>首页</a>
+      <a href="#" class="m-item item m-mobile-hide"><i class="mid book icon"></i>分类</a>
+      <!--<a href="#" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>  -->
+      <a href="#" class="m-item item m-mobile-hide"><i class="mid clone icon"></i>归档</a>
+      <a href="#" class="m-item item m-mobile-hide"><i class="mid info icon"></i>关于我</a>
+
+      <div class="right m-item item m-mobile-hide">
+        <div class="ui icon input m-margin-tb-tiny"><!--：透明的 inverted-->
+          <input type="text" placeholder="Search....">
+          <i class="search link icon"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+    <i class="sidebar icon"></i>
+  </a>
+</nav>
+<!--中间内容-->
+
+<div id="waypoint" class="m-container m-padded-tb-large aligned fadeIn"><!-- style="width: 100%;"-->
+  <div class="ui container">
+    <div class="ui stackable grid"> <!--style="height: auto; width: 85%"-->
+      <div class="eight wide column" style="height: 280px; margin-top: 14px; border-radius: 22px; font-family: 'Comic Sans MS'" >
+
+        <h6 class=" ui horizontal divider header m-margin-top-large" style="color: gray;margin-right: 15px"><img src="https://i.52112.com/icon/jpg/256/20180711/17689/921571.jpg" class="ui avatar image">友情链接</h6>
+        <div class="ui fluid vertical menu myBorder-radius" >
+          <!--点击分类名称，跳转到相应的分类页-->
+          <th:block th:each="favoriteLink : ${favoriteLinks}">
+            <a href="#" th:href="@{${favoriteLink.linkUrl}}" target="_blank" class="item">
+              <span th:text="${favoriteLink.linkName}" style="font-family: 'Comic Sans MS'; color: #0c80ba">友情链接1</span>  —  <th:block th:text="${favoriteLink.linkDescription}"></th:block>
+              <span class="ui mini label" th:text="${#dates.format(favoriteLink.createTime, 'yyyy-MM-dd')}" style=" background: wheat; color: dimgray; margin-top: auto">2019-10-17</span>
+            </a>
+          </th:block>
+        </div>
+      </div>
+
+      <div class="eight wide column" style="height: 280px; margin-top: 14px; border-radius: 22px" >
+        <h6 class=" ui horizontal divider header m-margin-top-large" style="color: gray; margin-right: 15px"><img src="https://i.52112.com/icon/jpg/256/20190705/46805/2170686.jpg" class="ui avatar image">个人分享</h6>
+        <div class="ui fluid vertical menu myBorder-radius" >
+          <!--点击分类名称，跳转到相应的分类页-->
+          <th:block th:each="personalLink : ${personalLinks}">
+          <a href="#" th:href="@{${personalLink.linkUrl}}" target="_blank" class="item">
+            <span th:text="${personalLink.linkName}" style="font-family: 'Comic Sans MS'; color: #0c80ba">个人分享1</span>  —  <th:block th:text="${personalLink.linkDescription}"></th:block>
+            <span class="ui mini label" th:text="${#dates.format(personalLink.createTime, 'yyyy-MM-dd')}" style="margin-top: auto; background: wheat; color: dimgray">2019-10-17</span>
+          </a>
+          </th:block>
+        </div>
+      </div>
+
+      <div class="eight wide column" style="height: 280px; margin-top: 30px; border-radius: 22px" >
+        <h6 class=" ui horizontal divider header m-margin-top-large" style="color: gray;margin-right: 15px"><img src="https://i.52112.com/icon/jpg/256/20190920/59558/2633642.jpg" class="ui avatar image">前辈博客1</h6>
+        <div class="ui fluid vertical menu myBorder-radius" >
+          <!--点击分类名称，跳转到相应的分类页-->
+          <th:block th:each="recommendLink : ${favoriteLinks}">
+            <a href="#" th:href="@{${recommendLink.linkUrl}}" target="_blank" class="item">
+              <span th:text="${recommendLink.linkName}" style="font-family: 'Comic Sans MS'; color: #0c80ba">前辈博客1</span> — <th:block th:text="${recommendLink.linkDescription}"></th:block>
+              <span class="ui mini label" th:text="${#dates.format(recommendLink.createTime, 'yyyy-MM-dd')}" style=" background: wheat; margin-top: auto;color: dimgray">2019-10-17</span>
+            </a>
+          </th:block>
+        </div>
+      </div>
+      <div class="eight wide column" style="height: 280px; margin-top: 30px; border-radius: 22px" >
+        <h6 class=" ui horizontal divider header m-margin-top-large" style="color: gray;margin-right: 15px"><img src="https://i.52112.com/icon/jpg/256/20190812/52907/2385754.jpg" class="ui avatar image">友链公告</h6>
+          <div class="ui middle aligned relaxed  animated list">
+            <div class="item">
+                <span class="content" style="color: grey"><img class="ui avatar image" src="https://i.52112.com/icon/jpg/256/20190929/61035/2691531.jpg"><!--middle aligned-->
+                  <u>First of all</u>，很感谢在我对于未来迷茫时帮助过我的学长与小伙伴，也十分感谢那些百忙之中的学长为我们分享技术前沿的风景。在此衷心的感谢他们。</span>
+                </span>
+            </div>
+            <div class="item">
+                <span class="content" style="color: grey"><img class="ui avatar image" src="https://i.52112.com/icon/jpg/256/20190719/49098/2253102.jpg"><!--middle aligned-->
+                  以上链接有涉及个人隐私问题，随时与我联系进行整改。</span>
+              </span>
+            </div>
+            <div class="item">
+              <span class="content" style="color: grey"><img class="ui avatar image" src="https://i.52112.com/icon/jpg/256/20190517/39796/1878075.jpg"><u>Last but not least</u><br><!--middle aligned-->
+                  <span style="margin-left: 33px">1）互换友链前，请确保您的网站可正常访问！</span><br>
+                  <span style="margin-left: 33px">2） 希望您也是个勤快写文章的小伙伴！</span><br>
+              </span>
+            </div>
+            <div class="item">
+              <span class="content" style="color: grey"><img class="ui avatar image" src="https://i.52112.com/icon/jpg/256/20190513/39348/1869709.jpg"><u>友链格式：</u><br><!--middle aligned-->
+                  <span style="margin-left: 33px">1）网站名称：Hoji技术博客</span><br>
+                  <span style="margin-left: 33px">2）网站链接：http://www.Hoji.com</span><br>
+                  <span style="margin-left: 33px">2）网站描述：Hoji 的个人博客，热爱技术，热衷分享</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+
+<div id="toolbar" class="m-padded m-fixed m-right-bottom" style="font-family: 'Comic Sans MS'; top: 40%; display: none">
+  <div class="ui vertical icon buttons" style="font-family: 'Comic Sans MS'">
+    <img style="cursor:pointer" id="toTop-button" class="ui mini avatar image" src="https://i.52112.com/icon/jpg/256/20170418/5858/295136.jpg"></div><!--<i class="chevron up icon" ></i>-->
+<!--  <div id="toTop-button" class="ui black icon button" style="margin-bottom: 1px"><i class="chevron up icon" ></i></div>-->
+  </div>
+</div>
+<!--侧边框-->
+<div class="ui right demo vertical sidebar labeled icon menu">
+  <a class="item">
+    <i class="home icon"></i>
+    Home
+  </a>
+  <a class="item">
+    <i class="block layout icon"></i>
+    Topics
+  </a>
+  <a class="item">
+    <i class="smile icon"></i>
+    朋友
+  </a>
+</div>
+<div id="sidebar-button" class="ui icon button m-padded m-fixed m-right-bottom button"><i class="large caret left icon" ></i></div>
+
+<br><br><br><br><br><br><br><br><br>
+<footer th:replace="_fragments :: footer" class="ui  vertical segment m-padded-tb-massive"><!--inverted-->
+  <div class="ui center aligned container">
+    <div class="ui  divided stackable grid">
+      <div class="three wide column">
+        <div class="ui  link list">
+          <div class="item">
+            <img src="../static/images/wechat.jpg" th:src="@{/images/wechat.jpg}"  class="ui rounded image" alt="" style="width: 110px">
+          </div>
+        </div>
+      </div>
+      <div class="three wide column">
+        <h4 class="ui  header m-text-thin m-text-spaced " >最新博客</h4>
+        <div class="ui inverted link list">
+          <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+          <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+          <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+        </div>
+      </div>
+      <div class="three wide column">
+        <h4 class="ui  header m-text-thin m-text-spaced ">联系我</h4>
+        <div class="ui inverted link list">
+          <a href="#" class="item m-text-thin">Email：lirenmi@163.com</a>
+          <a href="#" class="item m-text-thin">QQ：865729312</a>
+        </div>
+      </div>
+      <div class="seven wide column">
+        <h4 class="ui  header m-text-thin m-text-spaced ">Blog</h4><!--inverted-->
+        <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客、会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人有所帮助...</p>
+      </div>
+    </div>
+    <div class="ui  section divider"></div>
+    <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2016 - 2019 Designed by Hoji</p>
+  </div>
+
+</footer>
+<!--/*/<th:block th:replace="_fragments :: script">/*/-->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<script src="../static/lib/waypoints/jquery.waypoints.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
+<!--<script src="/static/js/all.js"></script>-->
+<!--<script src="/static/js/friendlylink.js"></script>-->
+<!--/*/</th:block>/*/-->
+<script>
+  $('.menu.toggle').click(function () {
+    $('.m-item').toggleClass('m-mobile-hide');
+  });
+  $('#toTop-button').click(function () {
+    $(window).scrollTo(0, 400);
+  });
+
+  $('#sidebar-button').click(function () {
+    $('.ui.labeled.icon.sidebar').sidebar('toggle');
+  });
+
+</script>
+</html>

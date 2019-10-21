@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shonan.mapper.CommentMapper">
+
+  <resultMap id="blogCommentMap"  type="com.shonan.entity.BlogComment">
+    <id     property="id"         column="id"/>
+    <result property="content"    column="content"/>
+    <result property="createTime" column="create_time"/>
+    <result property="nickname"   column="nickname"/>
+    <result property="avatar"     column="avatar"/>
+    <result property="blogId" column="blog_id"/>
+    <!--<association property="blog"  javaType="com.shonan.entity.Blog">
+      <id property="id"                 column="id"/>
+      <result property="commentSwitch"  column="commentSwitch"/>
+      <result property="shareStatementSwitch" column="shareStatementSwitch"/>
+      <collection property="commentList" ofType="com.shonan.entity.BlogCommentment">
+        <id property="id" column="id"/>
+      </collection>
+
+    </association>--> <!--修改:10月7日20:38:09-->
+
+    <association property="parentComment" javaType="com.shonan.entity.BlogComment">
+      <result property="id" column="parent_comment_id"/>
+    </association>
+
+    <association property="replyComments" javaType="com.shonan.entity.BlogComment">
+      <id     property="id"           column="id"/>
+      <result property="content"      column="content"/>
+      <result property="createTime"   column="create_time"/>
+      <result property="nickname"     column="nickname"/>
+      <result property="avatar"       column="avatar"/>
+
+      <association property="parentComment" javaType="com.shonan.entity.BlogComment">
+        <id     property="id"       column="id"/>
+        <result property="nickname" column="nackname"/>
+        <result property="avatar"   column="avatar"/>
+        <result property="content"  column="content"/>
+      </association>
+    </association>
+
+  </resultMap>
+
+  <select id="findByBlogId" parameterType="Long" resultMap="blogCommentMap">
+    SELECT *
+    from t_comment
+    where tc.blogId = #{id}
+  </select>
+
+  <!--<select id="findOne" parameterType="Long" resultMap="blogCommentMap">
+    /*SELECT tc.*, tb.**//*修改2019年10月7日20:40:54*/
+    SELECT tc.*, tb.id
+    from t_comment tc, t_blog tb
+    where id = #{id}
+  </select>-->
+  <select id="findOne" parameterType="Long" resultType="com.shonan.entity.BlogComment">
+    /*SELECT tc.*, tb.**//*修改2019年10月7日20:40:54*/
+    SELECT tc.*
+    from t_comment tc,
+    where id = #{id}
+  </select>
+
+  <insert id="saveComment" parameterType="com.shonan.entity.BlogComment">
+    insert into t_comment
+    set id=#{id}, avatar=#{avatar}, content=#{content},
+    create_time=#{createTime}, nickname=#{nickname},
+    blog_id=#{blogId},
+    parentCommentId=#{parentComment.id},
+    responseCommentId=#{replyComments.}
+  </insert>
+</mapper>

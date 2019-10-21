@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hoji | 归档</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+  <link rel="stylesheet" href="../static/css/me.css">
+</head>
+<body>
+  <!--导航-->
+  <nav th:replace="_fragments :: menu(4)" class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
+    <div class="ui container">
+      <div class="ui inverted secondary stackable menu">
+        <h2 class="ui color-nice header item">Blog</h2>
+        <a href="#" class=" m-item item m-mobile-hide"><i class="mini home icon"></i>首页</a>
+        <a href="#" class="m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+        <!--<a href="#" class=" m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>-->
+        <a href="#" class="active m-item item m-mobile-hide"><i class="mini clone icon"></i>归档</a>
+        <a href="#" class="m-item item m-mobile-hide"><i class="mini info icon"></i>关于我</a>
+        <div class="right m-item item m-mobile-hide">
+          <div class="ui icon inverted transparent input m-margin-tb-tiny">
+            <input type="text" placeholder="Search....">
+            <i class="search link icon"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+      <i class="sidebar icon"></i>
+    </a>
+  </nav>
+
+  <div  class="m-container-small m-padded-tb-big animated fadeIn">
+    <div class="ui container">
+      <div id="waypoint" class="m-container animated fadeIn"><!-- style="width: 100%;"-->
+        <div class="ui container">
+          <span class="ui stackable grid"> <!--style="height: auto; width: 85%"-->
+            <!--左边的分类展示-->
+            <div class="five wide column">
+              <!--分类-->
+              <h4 class="ui horizontal divider header myfont-family" style="margin-right: 30px;"><img src="https://i.52112.com/icon/jpg/256/20190812/52872/2384903.jpg" class="ui avatar image">All the Archives are here</h4><!--m-margin-top-large-->
+              <div class="ui"><!--segments外层-->
+                <!--<div class="ui secondary segment" style="-moz-box-shadow: 4px 4px 5px #888888">
+                  <div class="ui two column grid">
+                    <div class="column">
+                      <i class="book icon"></i><font style="font-family: 'Comic Sans MS'; font-weight: bolder;">catalogue</font>
+                    </div>
+                    <div class="right aligned column">
+                      <a href="#" th:href="@{types/-1}" style="font-family: 'Comic Sans MS'; font-size: 16px; color: #888888;" target="_blank">more. . .<i class="angle double right icon"></i></a>
+                    </div>
+                  </div>
+                </div>-->
+                <div class="ui" style="margin-bottom: 100px"><!--segment分割线-->
+                  <div class="ui fluid vertical menu myBorder-radius">
+                    <!--点击归档日期--对应的归档文章-->
+                    <a href="#"  th:each="item : ${archiveMap}" class="item">
+                      <span th:text="${item.key}">2019-10-13</span>
+                      <span class="ui label"   style="background: rgb(200,221,235); color: dimgray">12</span>
+                      <!--<div class="ui basic left pointing label" th:text="${#arrays.length(type.blogList)}" th:classappend="${type.id==activeTypeId} ? 'mycolor'">13</div>-->
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--右边对应的客列表-->
+            <div class="ten wide column" th:each="item : ${archiveMap}">
+          <!--<div class="eleven wide column">-->
+            <div class="ui attached segment myBorder-radius">
+            <div th:each="blog : ${item.value}" class="ui segment myBorder-radius m-padded-tb-large"><!--padded vertical分块-->
+              <!--此处middle 是居中-->
+              <div class="ui middle aligned mobile reversed stackable grid">
+                <div class="night wide column">  <!--注意下面的写法-->
+                  <h4 class="ui header navColor"> <a th:href="@{/blog/{id}(id=${blog.id})}" href="#" target="_blank" class="m-black" th:text="${blog.title}">你真的理解什么是财富自由吗?</a></h4>
+                  <div class="ui grid">
+                    <div class="twelve wide column">
+                      <div class="ui mini horizontal  list"><!--link加深日期颜色-->
+                        <div class="item">
+    <!--                <img src="https://img-blog.csdnimg.cn/20191011185740656.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNTM5NTk5,size_16,color_FFFFFF,t_70" alt="" class="ui avatar image">-->
+                        <div class="content"><a href="#" class="header">Hoji</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> <span th:text="${#dates.format(blog.createdTime, 'yyyy-MM-dd')}">2019-10-01</span>
+                        </div>
+                        <div class="item">
+                          <i class="user icon"></i> <span th:text="${blog.viewCount}">2342</span>
+                        </div>
+                        <div class="item">
+                           <span style="font-size: 13px;"><a th:href="@{/blog/{id}(id=${blog.id})}" href="#" target="_blank">阅读更多 . . .</a></span>
+                        </div>
+                        <div class="item">
+                           <span style="font-size: 13px;"><a class="ui mycolor basic label m-padded-tiny m-text-thin" th:href="@{/types/{id}(id=${blog.typeId})}" th:text="${blog.type.name}" href="#" target="_blank">SpringBoot实战</a></span>
+                        </div>
+                        <!--<div class="item">&lt;!&ndash;right&ndash;&gt;
+                          <span style="font-size: 13px; font-weight: bolder"><a href="#" target="_blank" th:text="${blog.type.name}">SpringBoot实战</a></span>
+                          &lt;!&ndash;<a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.type.name}">认知升级</a>&ndash;&gt;
+                        </div>-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+              <!--/*-->
+            <div class="ui padded vertical segment m-padded-tb-large"><!--segment:是加分割线的-->
+              <div class="ui mobile reversed stackable grid">
+                <div class="eleven wide column">
+                  <h4 class="ui header">你真的理解什么是财富自由吗？</h4>
+                  <p style="font-size: 12px" class="m-text">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img src="../static/images/shonan.jpg" alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header">Haji</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> 2019-10-01
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> 2342
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui green basic label m-padded-tiny m-text-thin">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+                <!--<div class="five wide column">
+                  <a href="#" target="_blank">
+                    <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+                  </a>
+                </div>-->
+              </div>
+            </div>
+            <div class="ui padded vertical segment m-padded-tb-large">
+              <div class="ui mobile reversed stackable grid">
+                <div class="eleven wide column">
+                  <h4 class="ui header">你真的理解什么是财富自由吗？</h4>
+                  <p style="font-size: 12px" class="m-text">正确做好任何一件事情的前提是清晰、正确的理解目标。而事实是，我们很多人很多时候根本没有对目标正确的定义，甚至根本从来就没有想过，只是大家都那么做而已…...</p>
+                  <div class="ui grid">
+                    <div class="eleven wide column">
+                      <div class="ui mini horizontal link list">
+                        <div class="item">
+                          <img src="https://unsplash.it/100/100?image=1005" alt="" class="ui avatar image">
+                          <div class="content"><a href="#" class="header">Hoji</a></div>
+                        </div>
+                        <div class="item">
+                          <i class="calendar icon"></i> 2019-10-01
+                        </div>
+                        <div class="item">
+                          <i class="eye icon"></i> 2342
+                        </div>
+                      </div>
+                    </div>
+                    <div class="right aligned five wide column">
+                      <a href="#" target="_blank" class="ui mycolor basic label m-padded-tiny m-text-thin">认知升级</a>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div class="five wide column">
+                   <a href="#" target="_blank">
+                     <img src="https://unsplash.it/800/450?image=1005" alt="" class="ui rounded image">
+                   </a>
+                 </div>-->
+              </div>
+            </div>
+              <!--*/-->
+          </div>
+            <!--<div class="ui bottom attached ">&lt;!&ndash;segment&ndash;&gt;
+              <div class="ui aligned grid">
+                <div class="column" style="margin-top: 3px;">
+                  <a href="#" th:href="@{/types/{id}/(pageNum=${blogPageInfo.hasPreviousPage} ? ${blogPageInfo.prePage} : 1)}" th:unless="${blogPageInfo.isFirstPage}" class="ui mini  basic button">
+                    <i class="big hand point left outline icon aIcon"></i></a>
+                </div>
+                <div class="right  column" style="margin-left: 432px; margin-top: 3px">
+                  <a  href="#" th:href="@{/types/{id}/(pageNum=${blogPageInfo.hasNextPage} ? ${blogPageInfo.nextPage} : ${blogPageInfo.pages})}" th:unless="${blogPageInfo.isLastPage}" class="ui mini  basic button">
+                    <i class="big hand point right outline icon aIcon"></i>
+                  </a>
+                </div>
+              </div>
+            </div>-->
+          </div>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--中间内容-->
+  <!--<div id="waypoint2" class="m-container-small m-padded-tb-big" style="height: 800px!important;">
+    <div class="ui container">
+      <div class="right aligned column">
+        我已经写下 <h3 style="color: #A6C6FF" class="ui header m-inline-block m-text-thin" th:text="${blogCount}"> 114 </h3> 篇博客啦！
+      </div>
+      &lt;!&ndash;&lt;!&ndash;header&ndash;&gt;
+      <div class="ui top attached padded segment">
+        <div class="ui middle aligned two column grid">
+          <div class="column">
+            <h3 style="color: #0AC8FF" class="ui header">归档</h3>
+          </div>
+        </div>&ndash;&gt;
+      </div>
+
+      <th:block th:each="item : ${archiveMap}"> &lt;!&ndash;item对应的是entry键值对对象&ndash;&gt;
+      <h3 class="ui center aligned header" th:text="${item.key}">2017</h3>        &lt;!&ndash;取得年份&ndash;&gt;
+        <div class="ui fluid vertical menu">
+          &lt;!&ndash;点击文章跳转到文章的详情页面，在admin下的博客管理也应该加上&ndash;&gt;
+        <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="item" th:each="blog : ${item.value}">
+          <span >
+            <i class="mini  circle icon"></i><span th:text="${blog.title}">关于刻意练习的清单</span>
+            <div class="ui  basic left pointing label m-padded-mini " th:text="${#dates.format(blog.updatedTime,'MMMdd')}">9月03</div>
+          </span>
+          <div class="ui basic left pointing label m-padded-mini" style="color: #A6C6FF" th:text="${blog.flag}">原创</div>
+        </a>
+        &lt;!&ndash;/*&ndash;&gt;
+        <a href="#" target="_blank" class="item">
+          <span>
+            <i class="mini #3B38F0 circle icon"></i>关于刻意练习的清单
+            <div class="ui #3B38F0 basic left pointing label m-padded-mini ">9月03</div>
+          </span>
+          <div class="ui orange basic left pointing label m-padded-mini ">原创</div>
+        </a>
+        <a href="#" target="_blank" class="item">
+          <span>
+            <i class="mini color-nice circle icon"></i>关于刻意练习的清单
+            <div class="ui color-nice basic left pointing label m-padded-mini ">9月03</div>
+          </span>
+          <div class="ui orange basic left pointing label m-padded-mini ">原创</div>
+        </a>
+        &lt;!&ndash;*/&ndash;&gt;
+      </div>
+      </th:block>
+
+    <div id="toolbar" class="m-padded m-fixed m-right-bottom" style="display: none; font-family: 'Comic Sans MS'; top: 40%;">
+      <div class="ui vertical icon buttons" style="font-family: 'Comic Sans MS'">
+        <div id="toTop-button" class="ui black icon button" style="font-family: 'Comic Sans MS'"><i class="chevron up icon" ></i></div>
+      </div>
+    </div>
+
+  </div>-->
+  </div>
+
+  <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<!--          <h4 class="ui inverted header m-text-thin m-text-spaced " >最新博客</h4>
+          <div class="ui inverted link list">
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+          </div>
+        </div>
+        <div class="three wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
+          <div class="ui inverted link list">
+            <a href="#" class="item m-text-thin">Email：lirenmi@163.com</a>
+            <a href="#" class="item m-text-thin">QQ：865729312</a>
+          </div>
+        </div>
+        <div class="seven wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced ">Blog</h4>
+          <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客、会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人有所帮助...</p>
+        </div>
+      </div>
+      <div class="ui inverted section divider"></div>
+      <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2016 - 2017 Lirenmi Designed by Lirenmi</p>
+    </div>
+
+  </footer>-->
+  <!--/*/<th:block th:replace="_fragments :: script">/*/-->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+  <script src="../static/lib/waypoints/jquery.waypoints.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
+  <!--/*/</th:block>/*/-->
+  <script>
+    $('.menu.toggle').click(function () {
+      $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('#toTop-button').click(function () {
+      $(window).scrollTo(0, 500);
+    });
+
+    var waypoint = new Waypoint({
+      element: document.getElementById('waypoint'),
+      handler: function(direction) {
+        if (direction == 'down') {
+          $('#toolbar').show(700);
+        } else {
+          $('#toolbar').hide(500);
+        }
+      }
+    })
+  </script>
+</body>
+</html>

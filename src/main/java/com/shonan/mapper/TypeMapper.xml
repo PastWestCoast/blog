@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shonan.mapper.TypeMapper">
+    <!--<resultMap id="" type="">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <collection property="blogList" ofType="com.shonan.entity.Blog">
+            <id property="id" column="id"/>
+            <
+        </collection>
+    </resultMap>-->
+
+    <select id="getAllType" resultMap="allTypeIncludeBlog">
+        Select tt.id, tt.`name`, tb.id as tid
+        FROM t_type tt left join t_blog tb
+        on tt.id=tb.typeId
+    </select>
+    <resultMap id="allTypeIncludeBlog" type="com.shonan.entity.Type">
+        <id     property="id" column="id"/>
+        <result property="name" column="name"/>
+        <collection property="blogList" ofType="com.shonan.entity.Blog">
+            <id property="id" column="tid"/>
+<!--            <result property="title"     column="title"/>
+            <result property="content"   column="content"/>
+            <result property="flag"      column="flag"/>
+            <result property="viewCount" column="viewCount"/>
+            <result property="appreciationSwitch" column="appreciationSwitch"/>
+            <result property="shareStatementSwitch" column="shareStatementSwitch"/>
+            <result property="commentSwitch" column="commentSwitch"/>
+            <result property="createdTime" column="createdTime"/>
+            <result property="typeId" column="typeId"/>-->
+        </collection>
+    </resultMap>
+
+
+    <resultMap id="blogNumMap" type="com.shonan.entity.Type">
+        <id     property="id" column="id"/>
+        <result property="name" column="name"/>
+        <collection property="blogList" ofType="com.shonan.entity.Blog" column="id">
+            <id property="id" column="bid"/>
+        </collection>
+    </resultMap>
+    <select id="getTopType" resultMap="blogNumMap">
+        select tt.`name`, tt.id, tb.id as bid
+        from t_type tt
+        left join t_blog tb
+        on tt.id = tb.`typeId`
+    </select>
+
+</mapper>

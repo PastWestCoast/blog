@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.shonan.mapper.BlogMapper">
+
+  <select id="searchOn" parameterType="com.shonan.entity.Condition" resultMap="blogTypeMap">
+    SELECT tb.id, tb.`title`, tt.`name`, tb.`publishSwitch`, tb.`updatedTime`
+    FROM t_blog tb, t_type tt
+    WHERE tb.typeId = tt.id
+    <choose>
+      <when test="keyWord == null">
+        AND tb.typeId = #{typeId}
+      </when>
+      <when test="typeId == null">
+        AND tb.title LIKE concat('%', #{keyWord}, '%')
+      </when>
+      <otherwise>
+        AND tb.typeId = #{typeId}
+      </otherwise>
+    </choose>
+    AND tb.title LIKE concat('%', #{keyWord}, '%')
+  </select>
+
+  <select id="search" parameterType="String" resultMap="blogTypeMap">
+    SELECT tb.id, tb.`title`, tt.`name`, tb.`description`, tb.`updatedTime`, tb.`viewCount`
+    FROM t_blog tb, t_type tt
+    where tb.title LIKE concat('%', #{query}, '%')
+    AND tb.typeId = tt.id
+  </select>
+
+  <insert id="addNewBlog" parameterType="com.shonan.entity.Blog" useGeneratedKeys="true" keyProperty="id">
+    INSERT into t_blog SET
+    title=#{title},
+    content=#{content},
+    flag=#{flag},
+    viewCount=#{viewCount},
+    appreciationSwitch=#{appreciationSwitch},
+    shareStatementSwitch=#{shareStatementSwitch},
+    commentSwitch=#{commentSwitch},
+    publishSwitch=#{publishSwitch},
+    createdTime=#{createdTime},
+    updatedTime=#{updatedTime},
+    typeId=#{typeId},
+    description=#{description}
+  </insert>
+
+  <!--resultMap改为resultType，-->
+  <update id="viewCountIncrement" parameterType="Long">
+    UPDATE t_blog SET viewCount = viewCount+1 WHERE id=#{blogId}
+  </update>
+
+  <resultMap id="blogCommentMap" type="com.shonan.entity.Blog">
+    <id     property="id"        column="id"/>
+    <result property="title"     column="title"/>
+    <result property="content"   column="content"/>
+    <result property="flag"      column="flag"/>
+    <result property="viewCount" column="viewCount"/>
+    <result property="appreciationSwitch" column="appreciationSwitch"/>
+    <result property="shareStatementSwitch" column="shareStatementSwitch"/>
+    <result property="commentSwitch" column="commentSwitch"/>
+    <result property="createdTime" column="createdTime"/>
+    <result property="updatedTime" column="updatedTime"/>
+    <!--<collection property="commentList" ofType="com.shonan.entity.BlogComment">
+      <id     property="id" column="id"/>
+      <result property="content"    column="content"/>
+      <result property="createTime" column="create_time"/>
+      <result property="nickname"   column="nickname"/>
+      <result property="avatar" column="avatar"/>
+      <result property="adminComment" column="admin_comment"/>
+      <collection property="replyComments" ofType="com.shonan.entity.BlogComment">
+        <id     property="id" column="id"/>
+        <result property="content" column="content"/>
+        <result property="avatar" column="avatar"/>
+        <result property="nickname" column="nickname"/>
+        <association property="parentComment">
+          <id property="id" column="id"/>
+        </association>
+      </collection>
+    </collection>-->
+  </resultMap>
+
+  <select id="getAndConvertBlogById" parameterType="Long" resultType="com.shonan.entity.Blog">
+    Select tb.*
+    FROM t_blog tb
+    where tb.id = #{id}
+  </select>
+
+  <resultMap id="blogTypeMap" type="com.shonan.entity.Blog">
+    <id     property="id" column="id"/>
+    <result property="title" column="title"/>
+    <result property="content"   column="content"/>
+    <result property="flag"      column="flag"/>
+    <result property="viewCount" column="viewCount"/>
+    <result property="appreciationSwitch" column="appreciationSwitch"/>
+    <result property="shareStatementSwitch" column="shareStatementSwitch"/>
+<!--    <result property="commentSwitch" column="commentSwitch"/>-->
+    <result property="publishSwitch" column="publishSwitch"/>
+    <result property="updatedTime" column="updatedTime"/>
+    <result property="createdTime" column="createdTime"/>
+    <result property="description" column="description"/>
+    <result property="typeId" column="typeId"/>
+    <association property="type" javaType="com.shonan.entity.Type" column="id">
+      <id     property="id" column="tid"/>
+      <result property="name" column="name"/>
+    </association>
+  </resultMap>
+
+  <resultMap id="blogCommTypeMap" type="com.shonan.entity.Blog">
+    <id     property="id" column="id"/>
+    <result property="title" column="title"/>
+    <result property="content"   column="content"/>
+    <result property="flag"      column="flag"/>
+    <result property="viewCount" column="viewCount"/>
+    <result property="appreciationSwitch" column="appreciationSwitch"/>
+    <result property="shareStatementSwitch" column="shareStatementSwitch"/>
+    <result property="commentSwitch" column="commentSwitch"/>
+    <result property="publishSwitch" column="publishSwitch"/>
+    <result property="createdTime" column="createdTime"/>
+    <result property="updatedTime" column="updatedTime"/>
+    <!--<result property="description" column="description"/>-->
+    <result property="typeId" column="typeId"/>
+    <!--<association property="type" javaType="com.shonan.entity.Type" column="id">
+      <id     property="id" column="id"/>
+      <result property="name" column="name"/>
+    </association>-->
+
+    <!--<collection property="comment" ofType="com.shonan.entity.BlogCommentment" javaType="com.shonan.entity.BlogCommentment">
+      <id property="id" column="id"/>
+      <result property="avatar" column="avatar"/>
+      <result property="content" column="content"/>
+      <result property="create_time" column="create_time"/>
+      <result property="email" column="email"/>
+      <result property="nickname" column="nickname"/>
+      &lt;!&ndash;<result property="blog_id" column="blog_id"/>
+      <result property="parent_comment_id" column="parent_comment_id"/>
+      <result property="admin_comment" column="admin_comment"/>&ndash;&gt;
+    </collection>-->
+  </resultMap>
+
+  <!--<select id="getBlogById" resultType="com.shonan.entity.Blog" parameterType="Long">
+    /*select tb.*, tc.*
+    from t_blog tb
+    LEFT JOIN t_comment tc
+    ON tb.id = tc.blog_id
+    where tb.id=#{id}*/
+    select *
+    from t_blog
+    where id=#{id}
+  </select>-->
+
+  <select id="blogList" resultMap="blogTypeMap">
+    SELECT tb.id, tb.`title`, tb.`publishSwitch`, tb.`createdTime`, tb.`updatedTime`, tb.`description`, tb.viewCount,
+            tb.`typeId`, tb.`description`, tt.id as tid, tt.`name`
+    FROM t_blog tb
+    inner JOIN t_type tt
+    ON tb.`typeId` = tt.id
+  </select>
+
+  <select id="topBlogList" resultType="com.shonan.entity.Blog">
+    select  tb.id, tb.`title`, tb.`viewCount`
+    from t_blog tb
+    ORDER BY tb.viewCount DESC
+    LIMIT 6;
+  </select>
+
+  <select id="top3Blogs" resultType="com.shonan.entity.Blog">
+    select tb.title, tb.id
+    from t_blog tb
+    order by tb.viewCount desc
+    LIMIT 3
+  </select>
+
+  <select id="getDates" resultType="String">
+    select date_format(tb.createdTime, '%Y-%m') as year
+    from t_blog tb
+    group by year ASC
+  </select>
+
+  <select id="getBlogByTypeId" parameterType="Long" resultMap="getBlogByTypeId">
+    SELECT tb.id, tb.`title`, tb.`createdTime`, tb.`viewCount`, tt.id as tid, tt.`name`
+    FROM t_blog tb, t_type tt
+    where tb.typeId = #{typeId}
+    And tt.id = #{typeId}
+   <!-- <where>
+      <if test="tb.typeId != null">
+      </if>
+      <if test="#{typeId} != null">
+        And tt.id=#{typeId}
+      </if>
+     </where>-->
+    <!--<where>
+      <if test="tb.typeId != null and tt.id!=''">
+        and tb.typeId = #{typeId}
+      </if>
+      <if test="tt.id != null and tt.id != ''">
+        And tt.id=#{typeId}
+      </if>
+    </where>-->
+  </select>
+
+  <!--分类页面对应的逻辑-->
+  <select id="archiveBlog" parameterType="String" resultMap="getBlogByTypeId">
+    select tb.*, tt.id as tid, tt.`name`
+    from t_blog tb, t_type tt
+    where date_format(tb.createdTime, '%Y-%m') like #{year}
+    and tb.typeId = tt.id
+    <!--<where>
+      <if test="tb.typeId != null and tb.typeId != ''">
+        and tb.typeId = tt.id
+      </if>
+    </where>-->
+  </select>
+
+  <resultMap id="getBlogByTypeId" type="com.shonan.entity.Blog">
+    <id     property="id" column="id"/>
+    <result property="title" column="title"/>
+    <result property="createdTime" column="createdTime"/>
+    <result property="viewCount" column="viewCount"/>
+    <result property="flag" column="flag"/>
+    <association property="type" javaType="com.shonan.entity.Type">
+      <id     property="id" column="tid"/>
+      <result property="name" column="name"/>
+    </association>
+  </resultMap>
+
+  <select id="new5BlogList" resultType="com.shonan.entity.Blog">
+    select tb.`title`, tb.id, tb.`createdTime`,date_format(tb.`createdTime`, '%Y-%M-%d') as date
+    from t_blog tb
+    order by date desc
+    limit 6
+  </select>
+  <!--date_format(tb.`createdTime`, '%Y-%m-%d') as date 查询数据库写法，不应该在网页显示-->
+</mapper>

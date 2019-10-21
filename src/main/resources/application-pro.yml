@@ -1,0 +1,25 @@
+spring:
+#  \u6570\u636E\u5E93\u914D\u7F6E
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/blog?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+
+  pagehelper:
+    dialect: mysql
+    params: count=countSql
+    reasonable: true
+    support-methods-arguments: true
+
+#mybatis配置
+mybatis:
+  mapper-locations:
+    - classpath:mapper/*.xml
+    - classpath*:com/**/mapper/*.xml
+
+logging:
+  level:
+    root: warn
+    com.shonan: info
+  file: log/blog-pro.log

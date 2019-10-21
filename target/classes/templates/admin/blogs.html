@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="admin/_fragments :: head(~{::title})">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>博客管理</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+  <link rel="stylesheet" href="../../static/css/me.css">
+</head>
+<body>
+  <!--导航-->
+  <nav th:replace="admin/_fragments :: menu(1)" class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
+    <div class="ui container">
+      <div class="ui inverted secondary stackable menu">
+        <h2 class="ui green header item">管理后台</h2>
+        <a href="#" class="active m-item item m-mobile-hide"><i class="mini home icon"></i>博客</a>
+        <a href="#" class=" m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+        <!--<a href="#" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>-->
+        <div class="right m-item m-mobile-hide menu">
+          <div class="ui dropdown item">
+            <div class="text">
+              <img class="ui avatar " src="/static/images/linedpaper.png">
+              Hoji
+            </div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              <a href="#" class="item">注销</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+      <i class="sidebar icon"></i>
+    </a>
+  </nav>
+  <div class="ui attached pointing menu">
+    <div class="ui container">
+      <div class="right menu">
+        <a href="#" th:href="@{/admin/blogs/input}" class=" item"><i class="edit icon"></i>写文章</a>
+        <a href="#" th:href="@{/admin/blogs}" class="green active item"><i class="book icon"></i>列表</a>
+      </div>
+    </div>
+  </div>
+  <!--中间内容-->
+  <div  class="m-container-small m-padded-tb-big">
+    <div class="ui container">
+      <div class="ui secondary segment form ">
+        <!--隐藏input框框-->
+        <input type="hidden" name="page">
+        <div class="inline fields">
+          <div class="field">
+            <input type="text" name="keyWord" placeholder="Title" id="keyWord">
+          </div>
+          <div class="field">
+            <div class="ui labeled action input" id="search">
+              <div class="ui type selection dropdown">
+                <input type="hidden" name="typeId">   <!--这里注意-->
+                <i class="dropdown icon"></i>
+                <div class="default text"><i class="book icon"></i>Category</div>
+                <div class="menu">
+                  <div id="xialak" th:each="type:${types}" class="item" data-value="1" th:data-value="${type.id}" th:text="${type.name}">错误日志</div>
+                  <!--以下注释的内容，在ThemeLeaf中会隐藏掉，当然也可以去掉-->
+                  <!--/*-->
+                  <div class="item" data-value="2">开发者手册</div>
+                  <!--*/-->
+                </div>
+              </div>
+              <button id="clear-btn" class="ui fade animated button">
+                <div class="visible content">Clear</div>
+                <div class="hidden content"> <i class="shop icon"></i></div>
+               </button>
+            </div>
+          </div>
+          <div class="field">
+            <button type="button" id="search-btn" class="ui fade animated button">
+              <div class="visible content">Search</div>
+              <div class="hidden content"> <i class="search icon"></i></div>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="table-container">
+        <!--这里接受BlogController中的search方法返回的局部数据-->
+        <table th:fragment="blogList" class="ui selectable celled table">
+          <thead>
+          <tr>
+            <th>编号</th>>
+            <th>标题</th>
+            <th>类型</th>
+            <th>浏览次数</th>
+            <th>状态</th>
+            <th>更新时间</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="blog : ${blogPageInfo.list}">
+            <td th:text="${blog.id}">1</td>
+            <td><!--th:href="@{/blog/{id}(id=${blog.id})}" th:text="${blog.title}"-->
+              <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" style="color: black" th:text="${blog.title}">SpringBoot练习清单</a>
+            </td>
+            <td th:text="${blog.type.name}">认知升级</td>
+            <td th:text="${blog.viewCount}">1w+</td>
+            <td th:text="${blog.publishSwitch} ? '发布':'草稿'">草稿</td>
+            <td th:text="${#dates.format(blog.updatedTime,'yyyy-MM-dd hh:mm:ss')}">2019-10-01 00:00</td>
+            <td>
+              <a href="#" th:href="@{/admin/blogs/{id}/input(id=${blog.id})}" class="ui mini positive button"><i class="edit icon"></i>编辑</a>
+              <a href="#" th:href="@{/admin/blogs/{id}/delete(id=${blog.id})}" onclick="return del()" class="ui mini red button"><i class="trash alternate icon"></i>删除</a>
+            </td>
+          </tr>
+          </tbody>
+          <!--分页界面-->
+          <p>当前第 <span th:text="${blogPageInfo.pageNum}"/>  / <span th:text="${blogPageInfo.pages}"/> 页；
+            总 <span th:text="${blogPageInfo.total}"/> 条记录</p>
+          <tfoot>
+
+          <tr th:if="${blogPageInfo.pages>1}">
+            <th colspan="39">
+              <div class="ui right floated pagination menu m-margin-bottom-small m-margin-top-small m-shadow-small">
+                <!--没有上一页则不显示向前翻页按钮-->
+                <a th:class="${blogPageInfo.hasPreviousPage} ? '' : 'disabled'"
+                   class="item"
+                   th:href="@{${blogPageInfo.isFirstPage} ? '##': '/admin/blogs' + '?pageNum=' + ${blogPageInfo.pageNum-1}}"
+                   th:unless="${blogPageInfo.pageNum == 1}"><i style="margin-top: 6px" class="arrow left icon"></i>
+                  <!--                   th:href="@{${blogPageInfo.pageNum == 1} ? '##' : '/admin/blogs' + '?pageNum='${blogPageInfo.pageNum-1}}"-->
+                </a>
+
+                <a class="item" th:if="${blogPageInfo.pageNum-3 >=1}"
+                   th:href="@{'/admin/blogs' + '?pageNum=' + ${blogPageInfo.pageNum-3}}"
+                   th:text="${blogPageInfo.pageNum -3}">1</a>
+
+                <a class="item" th:if="${blogPageInfo.pageNum-2 >=1}"
+                   th:href="@{'/admin/blogs'+'?pageNum=' + ${blogPageInfo.pageNum-2}}"
+                   th:text="${blogPageInfo.pageNum -2}">2</a>
+
+                <a class="item" th:if="${blogPageInfo.pageNum-1 >=1}"
+                   th:href="@{'/admin/blogs' + '?pageNum=' + ${blogPageInfo.pageNum-1}}"
+                   th:text="${blogPageInfo.pageNum -1}">3</a>
+
+                <a href="#" class="item active" th:text="${blogPageInfo.pageNum}" >1</a>
+
+                <a class="item" th:if="${blogPageInfo.pageNum+1 <= blogPageInfo.pages}"
+                   th:href="@{'/admin/blogs' + '?pageNum=' + ${blogPageInfo.pageNum+1} }"
+                   th:text="${blogPageInfo.pageNum +1}">4</a>
+
+                <a class="item" th:if="${blogPageInfo.pageNum+2 <= blogPageInfo.pages}"
+                   th:href="@{'/admin/blogs'+'?pageNum=' + ${blogPageInfo.pageNum+2}}"
+                   th:text="${blogPageInfo.pageNum +2}">5</a>
+
+                <a class="item" th:if="${blogPageInfo.pageNum+3 <= blogPageInfo.pages}"
+                   th:href="@{'/admin/blogs'+'?pageNum=' + ${blogPageInfo.pageNum+3}}"
+                   th:text="${blogPageInfo.pageNum +3}">6
+                </a>
+                <a class="item" th:class="${blogPageInfo.isLastPage} ? 'disabled' : ''"
+                   th:href="@{ ${blogPageInfo.isLastPage} ? '##' : '/admin/blogs' + '?pageNum=' + ${blogPageInfo.pageNum+1}}"
+                   th:unless="${blogPageInfo.isLastPage}"><i style="margin-top: 6px" class="arrow right icon"></i>
+                  <!--th:href="@{${blogPageInfo.isLastPage} ?   '##' : '/admin/blogs' +  '?pageNum='${blogPageInfo.pageNum+1}}"-->
+                </a>
+              </div>
+            </th>
+          </tr>
+          </tfoot>
+        </table>
+
+        <div class="ui success message" th:unless="${#strings.isEmpty(message)}">
+          <i class="close icon"></i>
+          <div class="header">Tip：</div>
+          <p th:text="${message}">恭喜，操作成功!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <br> <br>
+
+  <!--底部footer-->
+  <footer th:replace="admin/_fragments :: footer" class="ui inverted vertical segment m-padded-tb-massive">
+    <div class="ui center aligned container">
+      <div class="ui inverted divided stackable grid">
+        <div class="three wide column">
+          <div class="ui inverted link list">
+            <div class="item">
+              <img src="../../static/images/shonan.jpg" class="ui rounded image" alt="" style="width: 110px">
+            </div>
+          </div>
+        </div>
+        <div class="three wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced " >最新博客</h4>
+          <div class="ui inverted link list">
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+          </div>
+        </div>
+        <div class="three wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
+          <div class="ui inverted link list">
+            <a href="#" class="item m-text-thin">Email：1714931795@qq.com</a>
+            <a href="#" class="item m-text-thin">QQ：1714931795</a>
+          </div>
+        </div>
+        <div class="seven wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced ">Blog</h4>
+          <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客、会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人有所帮助...</p>
+        </div>
+      </div>
+      <div class="ui inverted section divider"></div>
+      <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2018 - 2019 Blog Designed by Shonan</p>
+    </div>
+  </footer>
+  <!--/*/<th:block th:replace="admin/_fragments :: script">/*/-->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+  <!--/*/</th:block>/*/-->
+
+  <script>
+    //下拉框
+    $('.menu.toggle').click(function () {
+      $('.m-item').toggleClass('m-mobile-hide');
+    });
+    $('.ui.dropdown').dropdown({
+      on : 'hover'
+    });
+    //消息提示关闭初始化
+    $('.message .close').on('click', function () {
+        $(this)
+          .closest('.message')
+          .transition('fade');
+      });
+    //清空按钮
+    $('#clear-btn').on('click', function() {
+        $('.ui.type.dropdown')
+          .dropdown('clear')
+        ;
+      });
+    function page(obj) {
+      $("[name='page']").val($(obj).data("page"));    /*得到data-page对应的值（自定义数据）*/
+      loadData();   /*把表单数据（标题、分类、序号）发送到controller处理，然后返回model*/
+    }
+
+    $("#search-btn").click(function () {
+      $("[name='page']").val(0);      //取得page隐藏属性
+      loadData();
+    });
+
+    function loadData() {
+      $("#table-container").load(
+        /*[[@{/admin/blogs/search}]]*/"/admin/blogs/search",
+       {
+         keyWord: $("[name='keyWord']").val(),
+         typeId: $("[name='typeId']").val(),
+         /*typeName: $("[name='typeName']").val(),*/
+         /*recommendSwitch: $("[name='recommend']").prop('checked'),    //改为checked状态*/
+         page: $("[name='page']").val()
+       }
+      );
+    }
+
+    function del(){
+      if(!confirm("确认要删除吗？")){
+        window.event.returnValue = false;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+spring:
+  #模板引擎配置
+  thymeleaf:
+    cache: false
+    mode: html
+
+  profiles:
+    active: dev
+  mvc:
+    view:
+      prefix: /templates/
+      suffix: .html
+    static-path-pattern: /static/**
+
+  messages:
+    basename: i18n/messages
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+
+
+#统一定义评论者的头像
+#comment.avatar: /images/avatar
+#category.icon: https://i.52112.com/icon/jpg/256/20190812/52872/2384903.jpg
+#home.icon: https://i.52112.com/icon/jpg/256/20190828/55955/2506135.jpg
+#achieve.icom: https://i.52112.com/icon/jpg/256/20190515/39647/1894972.jpg
+#about.icon: https://i.52112.com/icon/jpg/256/20190926/60158/2656025.jpg
+#left.icon: https://i.52112.com/icon/jpg/256/20190121/28511/1412322.jpg
+#calendar.icon: /images/calendar
+#viewCount: /images/viewCount
+#flag.icon: /images/flag
+#hoji.icon: https://img-blog.csdnimg.cn/20191011185740656.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNTM5NTk5,size_16,color_FFFFFF,t_70
+#  host:
+#    mall:
+#      admin: http://localhost:8080

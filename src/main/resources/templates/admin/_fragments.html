@@ -1,0 +1,214 @@
+<!--<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:fragment="head(title)">  &lt;!&ndash;通过传参的方式，灵活替换title&ndash;&gt;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:replace="${title}">博客详情</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+  <link rel="stylesheet" href="../static/css/typo.css"    th:href="@{/css/typo.css}">
+  <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
+  <link rel="stylesheet" href="../static/lib/prism/prism.css"   th:href="@{/lib/prism/prism.css}">
+  <link rel="stylesheet" href="../static/lib/tocbot/tocbot.css" th:href="@{/lib/tocbot/tocbot.css}">
+  <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+  &lt;!&ndash;自定义样式要加！important&ndash;&gt;
+</head>
+<body>
+&lt;!&ndash;公共部分的抽取&ndash;&gt;
+&lt;!&ndash;导航&ndash;&gt;
+<nav th:fragment="menu(n)" class="ui  attached segment m-padded-tb-mini m-shadow-small" >&lt;!&ndash;inverted翻转&ndash;&gt;
+  <div class="ui container">
+    <div class="ui secondary stackable menu">  &lt;!&ndash;inverted&ndash;&gt;
+      <h3 style="font-family: Bahnschrift;font-size: 25px; color: #50a8dc" class="ui  header item"><i class="skyatlas icon"></i>Hagen</h3>
+
+      <p class="m-text-thin" style="margin-top: 19px; margin-right: 40px; color: #A6C6FF">人如酒：有些会转变成醋，但出类拔萃者会随着年月增长而日渐香醇</p>
+
+      <a href="#" th:href="@{/}" class="m-item item m-mobile-hide " th:classappend="${n==1} ? 'active'"><i class="mid home icon"></i>首页</a>
+      <a href="#" th:href="@{/types/-1}" class="m-item item m-mobile-hide" th:classappend="${n==2} ? 'active'"><i class="mid idea icon"></i>分类</a>
+      &lt;!&ndash;<a href="#" th:href="@{/tags/-1}" class="m-item item m-mobile-hide" th:classappend="${n==3} ? 'active'"><i class="mini tags icon"></i>标签</a>&ndash;&gt;
+      <a href="#" th:href="@{/archives}" class="m-item item m-mobile-hide" th:classappend="${n==4} ? 'active'"><i class="mid clone icon"></i>归档</a>
+      &lt;!&ndash;<a href="#" th:href="@{/about}" class="m-item item m-mobile-hide" th:classappend="${n==5} ? 'active'"><i class="mid info icon"></i>关于我</a>&ndash;&gt;
+
+      &lt;!&ndash;<div class="right m-item item m-mobile-hide">
+        <form name="search" action="#" th:action="@{/search}" method="post" target="_blank">
+          <div class="ui icon inverted transparent input m-margin-tb-tiny" style="background-color: black;">
+            <input style="font-family: 'Comic Sans MS';  font-weight: bolder" type="text" name="query" placeholder="Search...." th:value="${query}"> &lt;!&ndash;这里提交（获取）了一个query&ndash;&gt;
+            <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+          </div>
+        </form>
+      </div>&ndash;&gt;
+
+      <div class="ui right search item">
+        <form name="search" action="#" th:action="@{/search}" method="post" target="_blank">
+          <div class="ui icon input ">
+            <input style="font-family: 'Comic Sans MS';  font-weight: bolder" type="text" name="query" placeholder="Search...." th:value="${query}">
+            <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+    <i class="sidebar icon"></i>
+  </a>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+&lt;!&ndash;底部footer&ndash;&gt;
+<footer th:fragment="footer" class="ui  vertical segment m-padded-tb-massive">&lt;!&ndash;inverted反色，vertical圆角&ndash;&gt;
+  <div class="ui center aligned container">
+    <div class="ui  divided stackable grid">  &lt;!&ndash;divided格子的分割线 inverted&ndash;&gt;
+      <div class="three wide column">
+        <div class="ui inverted link list">
+          <div class="item">
+            <img src="https://img-blog.csdnimg.cn/20191009211006254.png?x-oss-process=image/watermark,
+            type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQzNTM5NTk5,size_16,color_FFFFFF,t_70" class="ui rounded image" alt="" style="width: 110px"> &lt;!&ndash;th:src="@{/images/wechat.jpg}"&ndash;&gt; >
+          </div>
+        </div>
+      </div>
+      <div class="three wide column" >
+        <h4 class="ui  header m-text-thin m-text-spaced ">最新博客</h4>&lt;!&ndash;inverted&ndash;&gt;
+        <div id="newblog-container">
+          <div class="ui  link list" th:fragment="hitBlogList" style="font-family: 'Comic Sans MS'; font-size: 15px">&lt;!&ndash;inverted link&ndash;&gt;
+            <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="item m-text-thin" th:each="blog : ${top3List}" th:text="${blog.title}" style="text-align: left">用户故事（User Story）</a>
+            &lt;!&ndash;/*&ndash;&gt;
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+            &lt;!&ndash;*/&ndash;&gt;
+          </div>
+        </div>
+      </div>
+      <div style="font-family: 'Comic Sans MS'; font-size: 14px" class="three wide column">
+        <h4 style="font-family: 'Comic Sans MS'; font-size: 14px" class="ui  header m-text-thin m-text-spaced ">联系我</h4>&lt;!&ndash;inverted&ndash;&gt;
+        <div class="ui  link list">&lt;!&ndash;inverted&ndash;&gt;
+          <a href="#" class="item m-text-thin" th:text="#{index.email}">Email：1714931795@qq.com</a>
+          <a href="#" class="item m-text-thin" th:text="#{index.qq}">QQ：1714931795</a>
+        </div>
+      </div>
+      <div style="font-family: 'Comic Sans MS'" class="seven wide column">
+        <h4 style="font-family: 'Comic Sans MS'" class="ui grey header m-text-thin m-text-spaced ">Blog</h4>&lt;!&ndash;inverted&ndash;&gt;
+        <p style="font-family: 'Comic Sans MS'; font-size: 15px" class="m-text-thin m-text-spaced m-opacity-mini" th:text="#{index.blogDescription}">A personal blog, will share anything about programming, writing, thinking, hoping to help the people or "Geek" who come here. </p>
+      </div>
+    </div>
+    <div style="font-family: 'Comic Sans MS'" class="ui  section divider"></div>&lt;!&ndash;inverted divider是分割线&ndash;&gt;
+    <p style="font-family: 'Comic Sans MS'; font-size: 15px" class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2018 - <span th:text="${#dates.year(#dates.createNow())}">2019</span> Designed by Hagen</p>
+  </div>
+</footer>
+
+<th:block th:fragment="script">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
+  <script src="../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
+  <script src="../static/lib/tocbot/tocbot.min.js" th:src="@{/lib/tocbot/tocbot.min.js}"></script>
+  <script src="../static/lib/qrcode/qrcode.min.js" th:src="@{/lib/qrcode/qrcode.min.js}"></script>
+  <script src="../static/lib/waypoints/jquery.waypoints.min.js" th:src="@{/lib/waypoints/jquery.waypoints.min.js}"></script>
+  <script>
+    /*注意写法*/
+    $('#newblog-container').load(/*[[@{/footer/hitBlog}]]*/"/footer/hitBlog");
+  </script>
+</th:block>
+</body>
+</html>-->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:replace="${title}">博客详情</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+  <link rel="stylesheet" href="../../static/lib/editormd/css/editormd.min.css" th:href="@{/lib/editormd/css/editormd.min.css}">
+  <link rel="stylesheet" href="../../static/css/me.css" th:href="@{/css/me.css}">
+  <link rel="shortcut icon" th:href="@{/admin/dist/img/favicon.png}"/>
+  <link rel="stylesheet" th:href="@{/admin/dist/css/font-awesome.min.css}">
+  <!-- Ionicons -->
+  <link rel="stylesheet" th:href="@{/admin/dist/css/ionicons.min.css}">
+<!--  <link rel="stylesheet" th:href="@{/admin/dist/css/main.css}">-->
+<!--  <link rel="stylesheet" th:href="@{/admin/plugins/bootstrap/css/bootstrap.css}"/>-->
+  <link rel="stylesheet" th:href="@{/admin/plugins/sweetalert/sweetalert.css}"/>
+<!--  <link rel="stylesheet" th:href="@{/admin/plugins/jqgrid-5.3.0/ui.jqgrid-bootstrap4.css}"/>-->
+</head>
+<body>
+<!--导航-->
+<nav th:fragment="menu(n)" class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
+  <div class="ui container">
+    <div class="ui inverted secondary stackable menu">
+      <h3 class="ui header item" style="color: #50A8DC"><i class="key icon"></i>管理后台</h3>
+      <a href="#" th:href="@{/admin/blogs}" class=" m-item item m-mobile-hide" th:classappend="${n==1} ? 'active'"><i class="mid home icon"></i>博客管理</a>
+      <a href="#" th:href="@{/admin/types}" class=" m-item item m-mobile-hide" th:classappend="${n==2} ? 'active'"><i class="mid idea icon"></i>分类管理</a>
+<!--      <a href="#" th:href="@{/archives}" class="m-item item m-mobile-hide" th:classappend="${n==3} ? 'active'"><i class="mid clone icon"></i>归档</a>-->
+      <a href="#" th:href="@{/admin/comments}" class="m-item item m-mobile-hide" th:classappend="${n==4} ? 'active'"><i class="mid comment icon"></i>评论管理</a>
+      <a href="#" th:href="@{/admin/link}" class="m-item item m-mobile-hide" th:classappend="${n==5} ? 'active'"><i class="mid user icon"></i>友链管理</a>
+      <!-- <a href="#" th:href="@{/admin/tags}" class="m-item item m-mobile-hide" th:classappend="${n==3} ? 'active'"><i class="mini tags icon"></i>标签</a>-->
+      <div class="right m-item m-mobile-hide menu">
+        <div class="ui dropdown item">
+          <div class="text">
+            <img class="ui avatar image" src="/static/images/shonan.jpg" ><!--th:src="@{${session.user.avatar}}"-->
+            <span >Hoji</span><!--th:text="${session.user.nickname}"-->
+          </div>
+          <i class="dropdown icon"></i>
+          <div class="menu">
+            <a href="#" th:href="@{/admin/logout}" class="item">注销</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+    <i class="sidebar icon"></i>
+  </a>
+</nav>
+<!--导航-->
+<!--底部footer-->
+<footer th:fragment="footer" class="ui inverted vertical segment m-padded-tb-massive">
+  <div class="ui center aligned container">
+    <div class="ui inverted divided stackable grid">
+      <div class="three wide column">
+        <div class="ui inverted link list">
+          <div class="item">
+            <img src="../static/images/wechat.jpg" th:src="@{/images/wechat.jpg}"  class="ui rounded image" alt="" style="width: 110px">
+          </div>
+        </div>
+      </div>
+      <div class="three wide column">
+        <h4 class="ui inverted header m-text-thin m-text-spaced " >最新博客</h4>
+        <div class="ui inverted link list">
+          <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+          <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+          <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+        </div>
+      </div>
+      <div class="three wide column">
+        <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
+        <div class="ui inverted link list">
+          <a href="#" class="item m-text-thin">Email：1714931795@qq.com</a>
+          <a href="#" class="item m-text-thin">QQ：1714931795</a>
+        </div>
+      </div>
+      <div class="seven wide column">
+        <h4 class="ui inverted header m-text-thin m-text-spaced ">Blog</h4>
+        <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客、会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人有所帮助...</p>
+      </div>
+    </div>
+    <div class="ui inverted section divider"></div>
+    <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2018 - 2019 Designed by Hoji</p>
+  </div>
+</footer>
+
+<th:block th:fragment="script">
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+  <script src="../../static/lib/editormd/editormd.min.js" th:src="@{/lib/editormd/editormd.min.js}" ></script><!---->
+  <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+</th:block>
+</body>
+</html>

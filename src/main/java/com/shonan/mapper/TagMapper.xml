@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.shonan.mapper.TagMapper">
+
+  <!--<insert id="saveTag" parameterType="com.shonan.entity.Tag">
+    INSERT INTO t_tag SET name = #{tagName} where id=#{id}
+  </insert>
+
+  <delete id="deleteTagById" parameterType="Long">
+    DELETE from t_tag WHERE id=#{id}
+  </delete>
+
+  <select id="getTagById" parameterType="com.shonan.entity.Tag">
+    SELECT * FROM t_tag where id=#{id}
+  </select>-->
+
+</mapper>
