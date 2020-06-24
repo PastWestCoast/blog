@@ -4,7 +4,8 @@ A personal blog
 ### 技术栈
 - 数据库使用 Mysql
 - 缓存中间件使用 Redis
-- 使用后端框架 SpringBoot 进行整合
+- 使用后端框架 SpringBoot 整合 Spring、MyBatis、SpringMVC
+- 分页插件：Pagehelper
 
 
 ### 特点
